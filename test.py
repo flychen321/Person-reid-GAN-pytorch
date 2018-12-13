@@ -85,7 +85,7 @@ def load_network(network):
     save_path = os.path.join('./model',name,'net_%s.pth'%opt.which_epoch)
     network.load_state_dict(torch.load(save_path))
     return network
-pyt
+
 
 #-----multi-gpu training---------
 # def load_network(network):
