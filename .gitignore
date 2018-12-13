@@ -1,0 +1,12 @@
+*.zip
+*.jpg
+*.png
+*.mat
+*log.*
+*.html
+*.pyc
+*.jpeg
+*.pth
+*checkpoint*
+*data/*
+*.xml

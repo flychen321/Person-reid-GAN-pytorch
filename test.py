@@ -22,9 +22,9 @@ from model import ft_net, ft_net_dense
 # Options
 # --------
 parser = argparse.ArgumentParser(description='Training')
-parser.add_argument('--gpu_ids',default='3', type=str,help='gpu_ids: e.g. 0  0,1,2  0,2')
+parser.add_argument('--gpu_ids',default='0', type=str,help='gpu_ids: e.g. 0  0,1,2  0,2')
 parser.add_argument('--which_epoch',default='best', type=str, help='0,1,2,3...or last')
-parser.add_argument('--test_dir',default='/home/gq123/guanqiao/deeplearning/reid/market/pytorch',type=str, help='./test_data')
+parser.add_argument('--test_dir',default='./data/market/pytorch',type=str, help='./test_data')
 parser.add_argument('--name', default='ft_DesNet121', type=str, help='save model path')
 parser.add_argument('--batchsize', default=32, type=int, help='batchsize')
 parser.add_argument('--use_dense', action='store_true', help='use densenet121' )
@@ -80,27 +80,26 @@ use_gpu = torch.cuda.is_available()
 
 ######################################################################
 # Load model
-'''
 #----------single gpu training-----------------
 def load_network(network):
     save_path = os.path.join('./model',name,'net_%s.pth'%opt.which_epoch)
     network.load_state_dict(torch.load(save_path))
     return network
-'''
+pyt
 
 #-----multi-gpu training---------
-def load_network(network):
-    save_path = os.path.join('./model',name,'net_%s.pth'%opt.which_epoch)
-    state_dict = torch.load(save_path)
-    # create new OrderedDict that does not contain `module.`
-    from collections import OrderedDict
-    new_state_dict = OrderedDict()
-    for k, v in state_dict.items():
-        namekey = k[7:] # remove `module.`
-        new_state_dict[namekey] = v
-    # load params
-    network.load_state_dict(new_state_dict)
-    return network
+# def load_network(network):
+#     save_path = os.path.join('./model',name,'net_%s.pth'%opt.which_epoch)
+#     state_dict = torch.load(save_path)
+#     # create new OrderedDict that does not contain `module.`
+#     from collections import OrderedDict
+#     new_state_dict = OrderedDict()
+#     for k, v in state_dict.items():
+#         namekey = k[7:] # remove `module.`
+#         new_state_dict[namekey] = v
+#     # load params
+#     network.load_state_dict(new_state_dict)
+#     return network
 
 ######################################################################
 # Extract feature

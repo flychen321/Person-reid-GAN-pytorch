@@ -2,7 +2,7 @@ import os
 from shutil import copyfile
 
 # You only need to change this line to your dataset download path
-download_path = '/home/gq123/guanqiao/deeplearning/reid_baseline_pytorch/market'
+download_path = './data/market'
 
 if not os.path.isdir(download_path):
     print('please change the download_path')

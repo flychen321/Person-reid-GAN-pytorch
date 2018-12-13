@@ -34,8 +34,8 @@ from torch.utils.data import Dataset,DataLoader
 parser = argparse.ArgumentParser(description='Training')
 #parser.add_argument('--gpu_ids',default='3', type=str,help='gpu_ids: e.g. 0  0,1,2  0,2')
 parser.add_argument('--name',default='ft_DesNet121', type=str, help='output model name')
-parser.add_argument('--data_dir',default='/home/gq123/guanqiao/deeplearning/reid/market/pytorch',type=str, help='training dir path')
-parser.add_argument('--batchsize', default=64, type=int, help='batchsize')
+parser.add_argument('--data_dir',default='data/market/pytorch',type=str, help='training dir path')
+parser.add_argument('--batchsize', default=32, type=int, help='batchsize')
 parser.add_argument('--erasing_p', default=0.8, type=float, help='Random Erasing probability, in [0,1]')
 parser.add_argument('--use_dense', action='store_true', help='use densenet121' )
 opt = parser.parse_args()
@@ -43,7 +43,7 @@ opt = parser.parse_args()
 data_dir = opt.data_dir
 name = opt.name
 
-generated_image_size=24000
+generated_image_size=0
 '''
 str_ids = opt.gpu_ids.split(',')
 gpu_ids = []
@@ -264,9 +264,9 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
             #epoch_acc = running_corrects / dataset_sizes[phase]
             if phase =='train':
                # epoch_acc = running_corrects / (dataset_sizes[phase]-4992)    # 4992 generated image in total
-                epoch_acc = running_corrects / (dataset_sizes[phase]-generated_image_size)    # 4992 generated image in total
+                epoch_acc = float(running_corrects) / (dataset_sizes[phase]-generated_image_size)    # 4992 generated image in total
             else:
-                epoch_acc = running_corrects / dataset_sizes[phase]
+                epoch_acc = float(running_corrects) / dataset_sizes[phase]
                 
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(
                 phase, epoch_loss, epoch_acc))
@@ -277,7 +277,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
                 if epoch_acc>best_acc:
                     best_acc=epoch_acc   
                     best_model_wts = model.state_dict()
-                if epoch>=40:
+                if epoch>=0:
                     save_network(model, epoch)
             #    draw_curve(epoch)
 
@@ -329,7 +329,7 @@ optimizer_ft = optim.SGD([
              {'params': model.classifier.parameters(), 'lr': 0.05}
          ], momentum=0.9, weight_decay=5e-4, nesterov=True)
 
-model=nn.DataParallel(model,device_ids=[0,1,2]) # multi-GPU
+# model=nn.DataParallel(model,device_ids=[0,1,2]) # multi-GPU
 
 # Decay LR by a factor of 0.1 every 40 epochs
 exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=40, gamma=0.1)
